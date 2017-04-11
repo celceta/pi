@@ -1,3 +1,11 @@
+/* My site
+https://github.com/celceta/pi
+*/
+
+/* Referenced site(s)...
+http://qiita.com/satorukun/items/0d8457df566975195f97
+*/
+
 /* #define USE_RDY_PIN */
 
 #include <stdio.h>
