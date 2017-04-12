@@ -10,3 +10,6 @@ all: $(TARGET)
 clean:
 	-rm -f $(TARGET) $(OBJS)
 
+install:
+	cp -p $(TARGET) /usr/local/bin
+	chmod 775 /usr/local/bin/`basename "$(TARGET)"`
