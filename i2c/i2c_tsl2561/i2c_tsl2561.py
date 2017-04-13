@@ -31,20 +31,34 @@ class TSL2561:
 	visible  = self.getVisible()
         infrared = self.getInfrared()
 
-        if float(visible) == 0:
-            ratio = 9999;
-        else:
+        if float(visible) != 0:
             ratio = infrared / float(visible)
 
-	# get Lux
-        if ratio >= 0 and ratio <= 0.52:
-            lux = (0.0315 * visible) - (0.0593 * visible * (ratio ** 1.4))
-        elif ratio <= 0.65:
-            lux = (0.0229 * visible) - (0.0291 * infrared)
-        elif ratio <= 0.80:
-            lux = (0.0157 * visible) - (0.018 * infrared)
-        elif ratio <= 1.3:
-            lux = (0.00338 * visible) - (0.0026 * infrared)
+	    # get Lux
+            if 1 == 1 :
+                # for CS Package
+                if ratio >= 0 and ratio <= 0.52:
+                    lux = (0.0315 * visible) - (0.0593 * visible * (ratio ** 1.4))
+                elif ratio <= 0.65:
+                    lux = (0.0229 * visible) - (0.0291 * infrared)
+                elif ratio <= 0.80:
+                    lux = (0.0157 * visible) - (0.018 * infrared)
+                elif ratio <= 1.3:
+                    lux = (0.00338 * visible) - (0.0026 * infrared)
+                else:
+                    lux = 0
+            else:
+                # for T,FN and CL Package
+                if ratio >= 0 and ratio <= 0.50:
+                    lux = (0.0304 * visible) - (0.062 * visible * (ratio ** 1.4))
+                elif ratio <= 0.61:
+                    lux = (0.0224 * visible) - (0.031 * infrared)
+                elif ratio <= 0.80:
+                    lux = (0.0128 * visible) - (0.0153 * infrared)
+                elif ratio <= 1.3:
+                    lux = (0.00146 * visible) - (0.0012 * infrared)
+                else:
+                    lux = 0
         else:
             lux = 0
 
