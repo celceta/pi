@@ -1,5 +1,5 @@
-TARGET=hdc1000
-OBJS=hdc1000.o
+TARGET=i2c_hdc1000
+OBJS=i2c_hdc1000.o
 LIBS=wiringPi
 
 $(TARGET): $(OBJS)
@@ -12,4 +12,4 @@ clean:
 
 install:
 	cp -p $(TARGET) /usr/local/bin
-	chmod 775 /usr/local/bin/`basename "$(TARGET)"`
+	chmod 755 /usr/local/bin/`basename "$(TARGET)"`

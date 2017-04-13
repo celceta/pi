@@ -3,7 +3,7 @@
 ADDRESS=0x76
 
 case "$1" in
-	"config")
+	"init")
 		i2cset -y 1 $ADDRESS 0xf5 0xA0 i # config    101(1000ms) 000(filter off) 0 0(spi off)
 		i2cset -y 1 $ADDRESS 0xf4 0x27 i # ctrl_meas 001(x1) 001(x1) 11(normal mode)
 		i2cset -y 1 $ADDRESS 0xf2 0x01 i # ctrl_hum  001(x1)
@@ -36,6 +36,10 @@ case "$1" in
 		;;
 	"reset")
 		i2cset -y 1 $ADDRESS 0xe0 0x00; echo $?
+		;;
+	*)
+		echo "$0 init | get"
+		exit 1
 		;;
 esac
 

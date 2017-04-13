@@ -1,4 +1,4 @@
-/* My site
+/* by celceta (MIT-License)
 https://github.com/celceta/pi
 */
 
@@ -31,6 +31,7 @@ http://qiita.com/satorukun/items/0d8457df566975195f97
 #define CONFIGURE_MSB			(0x10)
 #define CONFIGURE_LSB			(0x00)
 
+enum MODE { NONE = 0, INIT, GET };
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +44,17 @@ int main(int argc, char *argv[])
 	unsigned char result[4];
 	unsigned char set_value[3];
 	unsigned char get_value[1];
+	enum MODE     mode = NONE;
+
+	if(argc == 2 && (strcmp(argv[1], "init") == 0))
+		mode = INIT;
+	else if(argc == 2 && (strcmp(argv[1], "get") == 0))
+		mode = GET;
+
+	if(mode == NONE){
+		fprintf(stderr, "Usage: %s init | get\n", argv[0]);
+		return __LINE__;
+	}
 
 #ifdef USE_RDY_PIN
 	/* setup RDY-pin */
@@ -53,8 +65,9 @@ int main(int argc, char *argv[])
 	/* setup I2C */
 	fd = wiringPiI2CSetup(ADDRESS);
 
-	if(argc == 2 && (strcmp(argv[1], "reset") == 0)){
-		printf("resetting... ");
+	if(mode == INIT){
+		printf("Initializing ... ");
+
 		set_value[0] = CONFIGURATION_POINTER;
 		set_value[1] = CONFIGURE_MSB;
 		set_value[2] = CONFIGURE_LSB;
