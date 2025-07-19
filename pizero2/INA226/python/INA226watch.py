@@ -8,7 +8,7 @@ from time import sleep
 import urllib.request
 from datetime import datetime
 
-BASEURL = "https://iot.344.jp/put_multi.cgi?DEV=BTPV1&VAL=%.2f,%.2f,%.2f,%.2f"
+BASEURL = "https://iot.344.jp/put_multi.cgi?DEV=BTPV1&VAL=%.2f,%.2f,%.2f,%.2f,%.2f,%.2f"
 
 class Average:
 
@@ -27,40 +27,45 @@ class Average:
 			total += n
 		return n / arr.count()
 
-def read(ina):
-	V = ina.voltage()
-	A = ina.current() / 1000.
-	W = ina.power() / 1000.
-
-	#print("%.2fV %.2fA %.2fW" % (V, A, W))
-
 
 if __name__ == "__main__":
-	INAs = (
-		None, # INA226(busnum=1, address=0x40, max_expected_amps=100, shunt_ohms=0.00075, log_level=logging.INFO),
-		INA226(busnum=1, address=0x44, max_expected_amps=100, shunt_ohms=0.00075, log_level=logging.INFO),
+	INA226_Battery = INA226(busnum=1, address=0x44, max_expected_amps=100, shunt_ohms=0.00075, log_level=logging.INFO)
+	INA226_Pv1     = INA226(busnum=1, address=0x40, max_expected_amps=100, shunt_ohms=0.00075, log_level=logging.INFO)
+	INA226_Pv2     = INA226(busnum=1, address=0x41, max_expected_amps=100, shunt_ohms=0.00075, log_level=logging.INFO)
+
+	INA226s = (
+		INA226_Battery,
+		INA226_Pv1,
+		INA226_Pv2,
 	)
 
-	for ina in INAs:
-		if ina is not None:
-			ina.configure()
+	for ina226 in INA226s:
+		if ina226 is not None:
+			ina226.configure()
 
 	while(1):
-		if INAs[0] is not None:
-			v1 = INAs[0].voltage()
-			a1 = INAs[0].current() / 1000.
+		if INA226_Battery is not None:
+			bat_v = INA226_Battery.voltage()
+			bat_a = INA226_Battery.current() / 1000.
 		else:
-			v1 = 0
-			a1 = 0
+			bat_v = 0
+			bat_a = 0
 
-		if INAs[1] is not None:
-			v2 = INAs[1].voltage()
-			a2 = INAs[1].current() / 1000.
+		if INA226_Pv1 is not None:
+			pv1_v = INA226_Pv1.voltage()
+			pv1_a = INA226_Pv1.current() / 1000.
 		else:
-			v2 = 0
-			a2 = 0
+			pv1_v = 0
+			pv1_a = 0
 
-		url = BASEURL % ( v1, a1, v2, a2 )
+		if INA226_Pv2 is not None:
+			pv2_v = INA226_Pv2.voltage()
+			pv2_a = INA226_Pv2.current() / 1000.
+		else:
+			pv2_v = 0
+			pv2_a = 0
+
+		url = BASEURL % ( pv1_v, pv1_a, bat_v, bat_a, pv2_v, pv2_a )
 		print(str(datetime.now()) + ' ' +  url, flush=True)
 
 		req = urllib.request.Request(url)
